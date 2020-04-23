@@ -51,6 +51,7 @@ class Ui_addLap(QDialog):
         self.label_hint.setGeometry(QRect(166, 90, 101, 16))
         self.radio_enow = QRadioButton(self)
         self.radio_enow.setObjectName(u"radio_enow")
+        self.radio_enow.setChecked(True)
         self.radio_enow.setGeometry(QRect(40, 150, 100, 20))
         self.radio_snow = QRadioButton(self)
         self.radio_snow.setObjectName(u"radio_snow")
@@ -61,12 +62,19 @@ class Ui_addLap(QDialog):
         self.radio_sdate = QRadioButton(self)
         self.radio_sdate.setObjectName(u"radio_sdate")
         self.radio_sdate.setGeometry(QRect(40, 243, 100, 20))
+
         self.end_time = QDateTimeEdit(self)
         self.end_time.setObjectName(u"end_time")
+        self.end_time.setMinimumDate(QDate.currentDate().addDays(-365))
+        self.end_time.setMaximumDate(QDate.currentDate().addDays(365))
         self.end_time.setGeometry(QRect(180, 179, 194, 22))
+
         self.start_time = QDateTimeEdit(self)
         self.start_time.setObjectName(u"start_time")
+        self.start_time.setMinimumDate(QDate.currentDate().addDays(-365))
+        self.start_time.setMaximumDate(QDate.currentDate().addDays(365))
         self.start_time.setGeometry(QRect(180, 243, 194, 22))
+
         self.btn_record = QPushButton(self)
         self.btn_record.setObjectName(u"btn_record")
         self.btn_record.setGeometry(QRect(120, 290, 113, 32))
@@ -153,7 +161,11 @@ class Ui_addLap(QDialog):
 
         timestamp = time.mktime(time.strptime(cur_time, '%Y-%m-%d %H:%M:%S'))
 
-        print cur_time
+        dt = self.start_time.dateTime()
+        dt_string = dt.toString(self.start_time.displayFormat())
+
+
+        print dt_string
 
 
         for timer in root.iter('Timer'):
@@ -165,25 +177,24 @@ class Ui_addLap(QDialog):
                     else:
                         data = ET.Element("lap", {"start": cur_time, "end" : cur_time, "task": self.combo_task_desc.currentText()})
                 elif self.radio_edate.isChecked():
+                    dt = self.end_time.dateTime()
+                    dt_string = dt.toString(self.end_time.displayFormat())
                     if duration == '::':
-                        data = ET.Element("lap", {"start": cur_time, "end" : self.end_time.dateTime(), "task": self.combo_task_desc.currentText()})
+                        data = ET.Element("lap", {"start": cur_time, "end" : dt_string, "task": self.combo_task_desc.currentText()})
                     else:
-                        data = ET.Element("lap", {"start": cur_time, "end" : self.end_time.dateTime(), "task": self.combo_task_desc.currentText()})
+                        data = ET.Element("lap", {"start": cur_time, "end" : dt_string, "task": self.combo_task_desc.currentText()})
                 elif self.radio_snow.isChecked():
                     if duration == '::':
                         data = ET.Element("lap", {"start": cur_time, "end" : cur_time, "task": self.combo_task_desc.currentText()})
                     else:
                         data = ET.Element("lap", {"start": cur_time, "end" : cur_time, "task": self.combo_task_desc.currentText()})
                 elif self.radio_sdate.isChecked():
+                    dt = self.end_time.dateTime()
+                    dt_string = dt.toString(self.end_time.displayFormat())
                     if duration == '::':
-                        data = ET.Element("lap", {"start": cur_time, "end" : self.start_time.dateTime(), "task": self.combo_task_desc.currentText()})
+                        data = ET.Element("lap", {"start": cur_time, "end" : dt_string, "task": self.combo_task_desc.currentText()})
                     else:
-                        data = ET.Element("lap", {"start": cur_time, "end" : self.start_time.dateTime(), "task": self.combo_task_desc.currentText()})
-                else:
-                    if duration == '::':
-                        data = ET.Element("lap", {"start": cur_time, "end" : cur_time, "task": self.combo_task_desc.currentText()})
-                    else:
-                        data = ET.Element("lap", {"start": cur_time, "end" : cur_time, "task": self.combo_task_desc.currentText()})
+                        data = ET.Element("lap", {"start": cur_time, "end" : dt_string, "task": self.combo_task_desc.currentText()})
                 timer.append(data)
                 tree.write("Timers v.1.xml")
 
