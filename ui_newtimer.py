@@ -29,13 +29,13 @@ class Ui_Newtimer(QWidget):
         QWidget.__init__(self)
 
         self.label = QLabel(self)
-        self.label.setObjectName(u"label")
+        self.label.setObjectName("label")
         self.label.setGeometry(QRect(20, 40, 131, 31))
         font = QFont()
         font.setPointSize(25)
         self.label.setFont(font)
         self.label_2 = QLabel(self)
-        self.label_2.setObjectName(u"label_2")
+        self.label_2.setObjectName("label_2")
         self.label_2.setGeometry(QRect(22, 87, 91, 16))
         self.cboPeriod = QComboBox(self)
         self.cboPeriod.addItem("")
@@ -51,12 +51,12 @@ class Ui_Newtimer(QWidget):
         self.cboPeriod.addItem("")
         self.cboPeriod.addItem("")
 
-        self.cboPeriod.setObjectName(u"cboPeriod")
+        self.cboPeriod.setObjectName("cboPeriod")
         self.cboPeriod.setGeometry(QRect(17, 100, 221, 32))
 
         self.listTimers = QListWidget(self)
 
-        self.listTimers.setObjectName(u"listTimers")
+        self.listTimers.setObjectName("listTimers")
         self.listTimers.setGeometry(QRect(22, 136, 451, 221))
         #self.listTimers.currentItemChanged.connect(self.selectTimer)
         self.listTimers.itemClicked.connect(self.selectTimer)
@@ -68,48 +68,48 @@ class Ui_Newtimer(QWidget):
         #    lw.item(x).text()
 
         self.label_3 = QLabel(self)
-        self.label_3.setObjectName(u"label_3")
+        self.label_3.setObjectName("label_3")
         self.label_3.setGeometry(QRect(23, 372, 131, 16))
 
         self.btnStart = QPushButton(self)
-        self.btnStart.setObjectName(u"btnStart")
+        self.btnStart.setObjectName("btnStart")
         self.btnStart.hide()
         self.btnStart.clicked.connect(self.startTimer)
 
         self.btnStart.setGeometry(QRect(19, 400, 110, 32))
         self.btnAddLap = QPushButton(self)
-        self.btnAddLap.setObjectName(u"btnAddLap")
+        self.btnAddLap.setObjectName("btnAddLap")
         self.btnAddLap.hide()
         self.btnAddLap.clicked.connect(self.addLap)
         self.btnAddLap.setGeometry(QRect(257, 400, 110, 32))
 
         self.btnDeleteTimer = QPushButton(self)
-        self.btnDeleteTimer.setObjectName(u"btnDeleteTimer")
+        self.btnDeleteTimer.setObjectName("btnDeleteTimer")
         self.btnDeleteTimer.setGeometry(QRect(369, 400, 110, 32))
         self.btnDeleteTimer.setEnabled(0)
         self.btnDeleteTimer.clicked.connect(self.deleteTimer)
 
         self.cboTasks = QComboBox(self)
-        self.cboTasks.setObjectName(u"cboTasks")
+        self.cboTasks.setObjectName("cboTasks")
         self.cboTasks.setGeometry(QRect(157, 365, 321, 32))
 
         self.dtFromFilter = QDateTimeEdit(self)
-        self.dtFromFilter.setObjectName(u"dtFromFilter")
+        self.dtFromFilter.setObjectName("dtFromFilter")
         self.dtFromFilter.setGeometry(QRect(320, 75, 151, 22))
         self.dtFromFilter.hide()
 
         self.dtToPicker = QDateTimeEdit(self)
-        self.dtToPicker.setObjectName(u"dtToPicker")
+        self.dtToPicker.setObjectName("dtToPicker")
         self.dtToPicker.setGeometry(QRect(320, 100, 151, 22))
         self.dtToPicker.hide()
 
         self.label_4 = QLabel(self)
-        self.label_4.setObjectName(u"label_4")
+        self.label_4.setObjectName("label_4")
         self.label_4.setGeometry(QRect(275, 80, 41, 16))
         self.label_4.hide()
 
         self.label_5 = QLabel(self)
-        self.label_5.setObjectName(u"label_5")
+        self.label_5.setObjectName("label_5")
         self.label_5.setGeometry(QRect(276, 100, 41, 16))
         self.label_5.hide()
 
@@ -137,7 +137,7 @@ class Ui_Newtimer(QWidget):
                     self.listTimers.addItem(timer.get("name") + " (00:00:00)")
             else:
                 self.listTimers.addItem(timer.get("name") + " (00:00:00)")
-            #print lap
+            #print(lap)
 
 
 
@@ -155,28 +155,28 @@ class Ui_Newtimer(QWidget):
     # setupUi
 
     def retranslateUi(self, Newtimer):
-        Newtimer.setWindowTitle(QCoreApplication.translate("Newtimer", u"Form", None))
-        self.label.setText(QCoreApplication.translate("Newtimer", u"Stopwatch", None))
-        self.label_2.setText(QCoreApplication.translate("Newtimer", u"Show Timers:", None))
-        self.cboPeriod.setItemText(0, QCoreApplication.translate("Newtimer", u"Total", None))
-        self.cboPeriod.setItemText(1, QCoreApplication.translate("Newtimer", u"Last Lap", None))
-        self.cboPeriod.setItemText(2, QCoreApplication.translate("Newtimer", u"Today", None))
-        self.cboPeriod.setItemText(3, QCoreApplication.translate("Newtimer", u"This Week", None))
-        self.cboPeriod.setItemText(4, QCoreApplication.translate("Newtimer", u"Workweek Average", None))
-        self.cboPeriod.setItemText(5, QCoreApplication.translate("Newtimer", u"This Month", None))
-        self.cboPeriod.setItemText(6, QCoreApplication.translate("Newtimer", u"Monthly Average", None))
-        self.cboPeriod.setItemText(7, QCoreApplication.translate("Newtimer", u"Yesterday", None))
-        self.cboPeriod.setItemText(8, QCoreApplication.translate("Newtimer", u"Last Week", None))
-        self.cboPeriod.setItemText(9, QCoreApplication.translate("Newtimer", u"Last Month", None))
-        self.cboPeriod.setItemText(10, QCoreApplication.translate("Newtimer", u"Daily", None))
-        self.cboPeriod.setItemText(11, QCoreApplication.translate("Newtimer", u"Custom", None))
+        Newtimer.setWindowTitle(QCoreApplication.translate("Newtimer", "Form", None))
+        self.label.setText(QCoreApplication.translate("Newtimer", "Stopwatch", None))
+        self.label_2.setText(QCoreApplication.translate("Newtimer", "Show Timers:", None))
+        self.cboPeriod.setItemText(0, QCoreApplication.translate("Newtimer", "Total", None))
+        self.cboPeriod.setItemText(1, QCoreApplication.translate("Newtimer", "Last Lap", None))
+        self.cboPeriod.setItemText(2, QCoreApplication.translate("Newtimer", "Today", None))
+        self.cboPeriod.setItemText(3, QCoreApplication.translate("Newtimer", "This Week", None))
+        self.cboPeriod.setItemText(4, QCoreApplication.translate("Newtimer", "Workweek Average", None))
+        self.cboPeriod.setItemText(5, QCoreApplication.translate("Newtimer", "This Month", None))
+        self.cboPeriod.setItemText(6, QCoreApplication.translate("Newtimer", "Monthly Average", None))
+        self.cboPeriod.setItemText(7, QCoreApplication.translate("Newtimer", "Yesterday", None))
+        self.cboPeriod.setItemText(8, QCoreApplication.translate("Newtimer", "Last Week", None))
+        self.cboPeriod.setItemText(9, QCoreApplication.translate("Newtimer", "Last Month", None))
+        self.cboPeriod.setItemText(10, QCoreApplication.translate("Newtimer", "Daily", None))
+        self.cboPeriod.setItemText(11, QCoreApplication.translate("Newtimer", "Custom", None))
 
-        self.label_3.setText(QCoreApplication.translate("Newtimer", u"Currently working on:", None))
-        self.btnStart.setText(QCoreApplication.translate("Newtimer", u"Start", None))
-        self.btnAddLap.setText(QCoreApplication.translate("Newtimer", u"Add Lap", None))
-        self.btnDeleteTimer.setText(QCoreApplication.translate("Newtimer", u"Delete Timer", None))
-        self.label_4.setText(QCoreApplication.translate("Newtimer", u"From:", None))
-        self.label_5.setText(QCoreApplication.translate("Newtimer", u"To:", None))
+        self.label_3.setText(QCoreApplication.translate("Newtimer", "Currently working on:", None))
+        self.btnStart.setText(QCoreApplication.translate("Newtimer", "Start", None))
+        self.btnAddLap.setText(QCoreApplication.translate("Newtimer", "Add Lap", None))
+        self.btnDeleteTimer.setText(QCoreApplication.translate("Newtimer", "Delete Timer", None))
+        self.label_4.setText(QCoreApplication.translate("Newtimer", "From:", None))
+        self.label_5.setText(QCoreApplication.translate("Newtimer", "To:", None))
     # retranslateUi
 
 
@@ -196,13 +196,13 @@ class Ui_Newtimer(QWidget):
 
         if selectName.split(" ")[0] != "*":
             xname = selectName.split(" ")[0]
-            self.btnStart.setText(QCoreApplication.translate("Newtimer", u"Start", None))
+            self.btnStart.setText(QCoreApplication.translate("Newtimer", "Start", None))
         else:
             xname = selectName.split(" ")[1]
-            self.btnStart.setText(QCoreApplication.translate("Newtimer", u"Stop", None))
+            self.btnStart.setText(QCoreApplication.translate("Newtimer", "Stop", None))
         for timer in root.iter('Timer'):
             tname = timer.get("name")
-            print xname
+            print(xname)
             if xname == tname:
                 for lap in timer.iter('lap'):
 
@@ -224,7 +224,7 @@ class Ui_Newtimer(QWidget):
             tt5 = currentDT.strftime("%Y-%m-%d %H:%M:%S")
 
             self.listTimers.currentItem().setText("* " + selectName)
-            self.btnStart.setText(QCoreApplication.translate("Newtimer", u"Stop", None))
+            self.btnStart.setText(QCoreApplication.translate("Newtimer", "Stop", None))
             for timer in root.iter('Timer'):
                 tname = timer.get("name")
                 if xname[0] == tname:
@@ -235,7 +235,7 @@ class Ui_Newtimer(QWidget):
         else:
             currentDT = datetime.now()
             tt5 = currentDT.strftime("%Y-%m-%d %H:%M:%S")
-            self.btnStart.setText(QCoreApplication.translate("Newtimer", u"Start", None))
+            self.btnStart.setText(QCoreApplication.translate("Newtimer", "Start", None))
             for timer in root.iter('Timer'):
                 tname = timer.get("name")
                 if selectName.split(" ")[1] == tname:
@@ -273,9 +273,9 @@ class Ui_Newtimer(QWidget):
                 if buttonReply == QMessageBox.Yes:
                     for item in self.listTimers.selectedItems():
                         self.listTimers.takeItem(self.listTimers.row(item))
-                    #print self.listTimers.currentItem().text()
+                    #print(self.listTimers.currentItem().text())
                     root.remove(child)
-                    #print self.listTimers.currentItem().text()
+                    #print(self.listTimers.currentItem().text())
                     tree.write('Timers v.1.xml')
                     self.btnDeleteTimer.setEnabled(False)
                     self.btnStart.hide()
