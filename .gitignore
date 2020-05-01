@@ -1,3 +1,6 @@
+# Data files:
+Timers v.*.xml
+
 # Python
 env
 *.pyc
