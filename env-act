@@ -1,0 +1,5 @@
+if [[ "$OSTYPE" == "msys" ]]; then
+    . env/Scripts/activate         #WINDOWS
+else
+    . env/bin/activate #OSX / Linux
+fi
