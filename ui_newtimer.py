@@ -20,10 +20,10 @@ import xml.etree.ElementTree as ET
 from ui_addlap import Ui_addLap
 import time
 from datetime import datetime
+from reusable_functions import format_timer_name
 
 
 class Ui_Newtimer(QWidget):
-
 
     def __init__(self):
         QWidget.__init__(self)
@@ -88,6 +88,7 @@ class Ui_Newtimer(QWidget):
         self.btnDeleteTimer.setGeometry(QRect(369, 400, 110, 32))
         self.btnDeleteTimer.setEnabled(0)
         self.btnDeleteTimer.clicked.connect(self.deleteTimer)
+        self.btnDeleteTimer.setEnabled(False)
 
         self.cboTasks = QComboBox(self)
         self.cboTasks.setObjectName("cboTasks")
@@ -115,39 +116,13 @@ class Ui_Newtimer(QWidget):
 
         self.retranslateUi(self)
 
-      #  tree = ET.parse("Timers v.1.xml")
-      #  root = tree.getroot()
-
-       # for child in root:
-            #self.listTimers.addItem(child.get('name') + " (00:00:00)")
-       #     self.listTimers.addItem(child.get('name'))
-        self.btnDeleteTimer.setEnabled(False)
-
+        # Populate Timers for the first time:
         xml_file_name = "Timers v.1.xml"
         tree = ET.parse(xml_file_name)
         root = tree.getroot()
         for timer in root.iter('Timer'):
-            lap = timer.find("lap")
-            if lap != None:
-                start_date = lap.get("start")
-                last_id=timer.find('lap[last()]').get('end')
-                if last_id == None:
-                    self.listTimers.addItem("* " + timer.get("name") + " (" + start_date + ") Started")
-                else:
-                    self.listTimers.addItem(timer.get("name") + " (00:00:00)")
-            else:
-                self.listTimers.addItem(timer.get("name") + " (00:00:00)")
-            #print(lap)
-
-
-
-            #tname = timer.get("name")
-            #if xname[0] == tname:
-            #    ts = time.time()
-            #    data = ET.Element("lap", {"start": tt5})
-            #    timer.append(data)
-                #root.insert(1, data)
-            #    tree.write("Timers v.1.xml")
+            text = format_timer_name(timer)
+            self.listTimers.addItem(text)
 
         QMetaObject.connectSlotsByName(self)
 
@@ -239,12 +214,14 @@ class Ui_Newtimer(QWidget):
             for timer in root.iter('Timer'):
                 tname = timer.get("name")
                 if selectName.split(" ")[1] == tname:
-                    test_id=timer.find('lap[last()]').get('start')
+                    # test_id=timer.find('lap[last()]').get('start')
                     timer.find('lap[last()]').set("end", tt5)
                     #data = ET.Element("lap", {"start": tt5})
                     #timer.append(data)
                     tree.write("Timers v.1.xml")
-                    self.listTimers.currentItem().setText(selectName.split(" ")[1] + " (" + currentDT.strftime("%H:%M:%S") + ")")
+
+                    text = format_timer_name(timer)
+                    self.listTimers.currentItem().setText(text)
 
 
     def addLap(self):

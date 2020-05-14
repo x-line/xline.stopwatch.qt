@@ -1,14 +1,15 @@
 # This Python file uses the following encoding: utf-8
 import sys
 import json
-from PySide2.QtWidgets import QApplication,QMainWindow, QAction, QListWidget, QMessageBox, QInputDialog, QWidget,QVBoxLayout, QMenu,QLabel, QStackedWidget, QPushButton
+from PySide2.QtWidgets import QApplication,QMainWindow, QAction, QListWidget, QComboBox, QMessageBox, QInputDialog, QWidget,QVBoxLayout, QMenu,QLabel, QStackedWidget, QPushButton
 from PySide2.QtCore import QDir, QFile, QXmlStreamWriter, QThreadPool, QTimer, QDateTime
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from ui_newtimer import Ui_Newtimer
 import time
 import traceback, sys
-from datetime import datetime
+from datetime import datetime, timedelta
+from reusable_functions import format_timer_name
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -28,17 +29,15 @@ class MainWindow(QMainWindow):
         self.timer.start()
 
     def recurring_timer(self):
-        ctt = time.time()
-        lw = self.window().findChild(QListWidget, "listTimers")
-        ctt2 = (ctt / 86400.) + 29226.
-        ctt3 = ctt2 - 25569.
-        ctt4 = ctt3 * 86400.
-        ctt5 = datetime.utcfromtimestamp(ctt4).strftime("%Y-%m-%d %H:%M:%S")
 
         xml_file_name = "Timers v.1.xml"
         tree = ET.parse(xml_file_name)
         root = tree.getroot()
 
+        # cboPeriod = self.window().findChild(QComboBox, "cboPeriod")
+        # periodFilter = cboPeriod.currentText();
+
+        lw = self.window().findChild(QListWidget, "listTimers")
         for x in range(lw.count()):
 
             cnamelist= lw.item(x).text().split(" ")
@@ -52,18 +51,8 @@ class MainWindow(QMainWindow):
                     timer_name = timer.get("name")
 
                     if cname == timer_name:
-                        lap = timer.find("lap")
-                        if lap != None:
-                            start_date = lap.get("start")
-                            timestamp = time.mktime(time.strptime(start_date, '%Y-%m-%d %H:%M:%S'))
-                            real_time = ctt - timestamp
-                            rtt2 = (real_time / 86400.) + 29226.
-                            rtt3 = rtt2 - 25569.
-                            rtt4 = rtt3 * 86400.
-                            rtt5 = datetime.utcfromtimestamp(rtt4).strftime("%H:%M:%S")
-                            lw.item(x).setText("* " + timer.get("name") + " (" + rtt5.__str__()+ ") Started")
-                            #self.listTimers.addItem("* " + timer.get("name") + " (" + rtt5.__str__() + ") Started")
-
+                        text = format_timer_name(timer)
+                        lw.item(x).setText(text)
 
     def new_app(self):
         (text, bool) = QInputDialog.getText(None, "New Timer", "Please enter the name of the new timer")
