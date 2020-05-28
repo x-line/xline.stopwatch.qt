@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Newtimer</class>
+ <class>Stopwatch</class>
  <widget class="QWidget" name="Stopwatch">
   <property name="geometry">
    <rect>
@@ -179,11 +179,14 @@
    </property>
   </widget>
   <widget class="QComboBox" name="cboTasks">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>157</x>
      <y>365</y>
-     <width>321</width>
+     <width>290</width>
      <height>32</height>
     </rect>
    </property>
@@ -245,6 +248,39 @@
      <width>451</width>
      <height>221</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnPencil">
+   <property name="geometry">
+    <rect>
+     <x>438</x>
+     <y>366</y>
+     <width>40</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>✎</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>16</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
    </property>
   </widget>
  </widget>

@@ -93,7 +93,22 @@ class Ui_Stopwatch(QWidget):
 
         self.cboTasks = QComboBox(self)
         self.cboTasks.setObjectName("cboTasks")
-        self.cboTasks.setGeometry(QRect(157, 365, 321, 32))
+        self.cboTasks.setGeometry(QRect(157, 365, 290, 32))
+        self.cboTasks.setEditable(False)
+
+        self.btnPencil = QPushButton(self)
+        self.btnPencil.setObjectName(u"btnPencil")
+        self.btnPencil.setGeometry(QRect(438, 366, 40, 30))
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btnPencil.sizePolicy().hasHeightForWidth())
+        self.btnPencil.setSizePolicy(sizePolicy)
+        font1 = QFont()
+        font1.setPointSize(20)
+        self.btnPencil.setFont(font1)
+        self.btnPencil.setFlat(False)
+        self.btnPencil.clicked.connect(self.btnPencil_Clicked)
 
         self.dtFromFilter = QDateTimeEdit(self)
         self.dtFromFilter.setObjectName("dtFromFilter")
@@ -153,6 +168,8 @@ class Ui_Stopwatch(QWidget):
         self.btnDeleteTimer.setText(QCoreApplication.translate("Newtimer", "Delete Timer", None))
         self.label_4.setText(QCoreApplication.translate("Newtimer", "From:", None))
         self.label_5.setText(QCoreApplication.translate("Newtimer", "To:", None))
+
+        self.btnPencil.setText(QCoreApplication.translate("Stopwatch", u"\u270e", None))
     # retranslateUi
 
 
@@ -213,6 +230,10 @@ class Ui_Stopwatch(QWidget):
                     text = format_timer_name(timer, periodFilter)
                     x.setText(text)
 
+    def btnPencil_Clicked(self):
+        editable = self.cboTasks.isEditable()
+        self.cboTasks.setEditable(not editable)
+
     def startTimer(self):
         xml_file_name = "Timers v.1.xml"
         tree = ET.parse(xml_file_name)
@@ -236,16 +257,17 @@ class Ui_Stopwatch(QWidget):
                     timer.append(data)
                     tree.write("Timers v.1.xml")
         else:
+            # Stop timer:
             currentDT = datetime.now()
             tt5 = currentDT.strftime("%Y-%m-%d %H:%M:%S")
             self.btnStart.setText(QCoreApplication.translate("Newtimer", "Start", None))
             for timer in root.iter('Timer'):
                 tname = timer.get("name")
                 if selectName.split(" ")[1] == tname:
-                    # test_id=timer.find('lap[last()]').get('start')
                     timer.find('lap[last()]').set("end", tt5)
-                    #data = ET.Element("lap", {"start": tt5})
-                    #timer.append(data)
+
+                    taskText = self.cboTasks.currentText()
+                    timer.find('lap[last()]').set("task", taskText)
                     tree.write("Timers v.1.xml")
 
                     text = format_timer_name(timer, periodFilter)
