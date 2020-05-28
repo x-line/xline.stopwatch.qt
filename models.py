@@ -3,7 +3,6 @@ from typing import Optional
 
 class Fluent:
 
-    dirk = 1
     start: datetime = datetime.min
     end: Optional[datetime]
     task: Optional[str]

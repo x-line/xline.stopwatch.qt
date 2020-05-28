@@ -50,6 +50,7 @@ class Ui_Newtimer(QWidget):
         self.cboPeriod.addItem("")
         self.cboPeriod.addItem("")
         self.cboPeriod.addItem("")
+        self.cboPeriod.currentTextChanged.connect(self.selectPeriod)
 
         self.cboPeriod.setObjectName("cboPeriod")
         self.cboPeriod.setGeometry(QRect(17, 100, 221, 32))
@@ -177,20 +178,47 @@ class Ui_Newtimer(QWidget):
             self.btnStart.setText(QCoreApplication.translate("Newtimer", "Stop", None))
         for timer in root.iter('Timer'):
             tname = timer.get("name")
-            print(xname)
+            # print(xname)
             if xname == tname:
                 for lap in timer.iter('lap'):
 
                     if lap.get('task') != None:
                         self.cboTasks.addItem(lap.get('task'))
 
+    def selectPeriod(self):
+        # if not self.cboPeriod.selectedItems(): return
+        periodFilter = self.cboPeriod.currentText();
+        # lw = self.window().findChild(QListWidget, "listTimers")
+        # for x in range(lw.count()):
 
+        xml_file_name = "Timers v.1.xml"
+        tree = ET.parse(xml_file_name)
+        root = tree.getroot()
+
+        # for x in self.listTimers.findItems('', Qt.MatchRegExp):
+        for i in range(self.listTimers.count()):
+            x = self.listTimers.item(i)
+
+            cnamelist = x.text().split(" ")
+            if cnamelist[0] == "*":
+                cname = cnamelist[1]
+            else:
+                cname = cnamelist[0]
+
+            # if cnamelist[0] == "*":
+            for timer in root.iter('Timer'):
+                timer_name = timer.get("name")
+
+                if cname == timer_name:
+                    text = format_timer_name(timer, periodFilter)
+                    x.setText(text)
 
     def startTimer(self):
         xml_file_name = "Timers v.1.xml"
         tree = ET.parse(xml_file_name)
         root = tree.getroot()
 
+        periodFilter = self.cboPeriod.currentText();
         selectName = self.listTimers.currentItem().text()
         if selectName.split(" ")[0] != "*":
 
@@ -203,7 +231,7 @@ class Ui_Newtimer(QWidget):
             for timer in root.iter('Timer'):
                 tname = timer.get("name")
                 if xname[0] == tname:
-                    ts = time.time()
+                    # ts = time.time()
                     data = ET.Element("lap", {"start": tt5})
                     timer.append(data)
                     tree.write("Timers v.1.xml")
@@ -220,7 +248,7 @@ class Ui_Newtimer(QWidget):
                     #timer.append(data)
                     tree.write("Timers v.1.xml")
 
-                    text = format_timer_name(timer)
+                    text = format_timer_name(timer, periodFilter)
                     self.listTimers.currentItem().setText(text)
 
 

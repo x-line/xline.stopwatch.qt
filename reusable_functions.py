@@ -1,6 +1,17 @@
 from datetime import datetime, timedelta
 
-def format_timer_name(timer):
+def format_timer_name(timer, filter='Total'):
+
+    today = datetime.today()
+    today = datetime(today.year, today.month, today.day)
+    start_filter = datetime.min
+    end_filter = datetime.max
+    if filter == 'This Week':
+        start_filter = today - timedelta(days=today.weekday())
+        # end_filter =
+    if filter == 'Last Week':
+        start_filter = today - timedelta(days=today.weekday() + 7)
+        end_filter = today - timedelta(days=today.weekday())
 
     name = timer.get("name")
     is_running = False
@@ -17,7 +28,9 @@ def format_timer_name(timer):
             end = datetime.now()     # in future: utcnow()
             is_running = True
 
-        delta += end - start
+        # Note this is simplistic. If there is overlap these need to be sliced.
+        if start >= start_filter and end < end_filter:
+            delta += end - start
 
     hours, remainder = divmod(delta.total_seconds(), 3600)
     minutes, seconds = divmod(remainder, 60)

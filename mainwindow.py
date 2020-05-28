@@ -34,8 +34,8 @@ class MainWindow(QMainWindow):
         tree = ET.parse(xml_file_name)
         root = tree.getroot()
 
-        # cboPeriod = self.window().findChild(QComboBox, "cboPeriod")
-        # periodFilter = cboPeriod.currentText();
+        cboPeriod = self.window().findChild(QComboBox, "cboPeriod")
+        periodFilter = cboPeriod.currentText();
 
         lw = self.window().findChild(QListWidget, "listTimers")
         for x in range(lw.count()):
@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
                     timer_name = timer.get("name")
 
                     if cname == timer_name:
-                        text = format_timer_name(timer)
+                        text = format_timer_name(timer, periodFilter)
                         lw.item(x).setText(text)
 
     def new_app(self):
