@@ -5,7 +5,7 @@ from PySide2.QtWidgets import QApplication,QMainWindow, QAction, QListWidget, QC
 from PySide2.QtCore import QDir, QFile, QXmlStreamWriter, QThreadPool, QTimer, QDateTime
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
-from ui_newtimer import Ui_Newtimer
+from ui_stopwatch import Ui_Stopwatch
 import time
 import traceback, sys
 from datetime import datetime, timedelta
@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Stopwatch')
         self.create_menu()
 
-        main_widget = Ui_Newtimer()
+        main_widget = Ui_Stopwatch()
         self.setCentralWidget(main_widget)
         self.show()
 

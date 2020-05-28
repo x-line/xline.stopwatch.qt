@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Newtimer</class>
- <widget class="QWidget" name="Newtimer">
+ <widget class="QWidget" name="Stopwatch">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -186,6 +186,9 @@
      <width>321</width>
      <height>32</height>
     </rect>
+   </property>
+   <property name="editable">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QDateTimeEdit" name="dtFromFilter">

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'newtimer.ui'
+## Form generated from reading UI file 'ui_stopwatch.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.14.2
 ##
@@ -23,7 +23,7 @@ from datetime import datetime
 from reusable_functions import format_timer_name
 
 
-class Ui_Newtimer(QWidget):
+class Ui_Stopwatch(QWidget):
 
     def __init__(self):
         QWidget.__init__(self)
