@@ -10,7 +10,7 @@ from models.Timers import Timers
 from PySide2.QtWidgets import QApplication,QMainWindow, QAction, QListWidget, QComboBox, QMessageBox, QInputDialog, QWidget,QVBoxLayout, QMenu,QLabel, QStackedWidget, QPushButton
 from PySide2.QtCore import QDir, QFile, QXmlStreamWriter, QThreadPool, QTimer, QDateTime
 from reusable_functions import format_timer_name
-from src.exports import Exports
+from exports import Exports
 from ui_stopwatch import Ui_Stopwatch
 from xml.dom import minidom
 

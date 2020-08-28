@@ -18,6 +18,7 @@ from PySide2.QtWidgets import *
 import xml.etree.ElementTree as ET
 import time
 from datetime import datetime
+from models.Timers import Timers
 
 class Ui_addLap(QDialog):
     select_text = ""
@@ -198,6 +199,7 @@ class Ui_addLap(QDialog):
                 data.tail = '\n    '
                 timer.append(data)
                 tree.write("Timers v.1.xml")
+                # Timers.write(root, "Timers v.1.xml")
 
                 self.close()
 

@@ -21,6 +21,7 @@ from ui_addlap import Ui_addLap
 import time
 from datetime import datetime
 from reusable_functions import format_timer_name
+from models.Timers import Timers
 
 
 class Ui_Stopwatch(QWidget):
@@ -257,6 +258,8 @@ class Ui_Stopwatch(QWidget):
                     data.tail = '\n        '
                     timer.append(data)
                     tree.write("Timers v.1.xml")
+                    # Timers.write(root, "Timers v.1.xml")
+
         else:
             # Stop timer:
             currentDT = datetime.now()
@@ -270,6 +273,8 @@ class Ui_Stopwatch(QWidget):
                     taskText = self.cboTasks.currentText()
                     timer.find('lap[last()]').set("task", taskText)
                     tree.write("Timers v.1.xml")
+                    # Timers.write(root, "Timers v.1.xml")
+
 
                     text = format_timer_name(timer, periodFilter)
                     self.listTimers.currentItem().setText(text)
