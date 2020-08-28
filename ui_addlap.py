@@ -195,6 +195,7 @@ class Ui_addLap(QDialog):
                         data = ET.Element("lap", {"start": cur_time, "end" : dt_string, "task": self.combo_task_desc.currentText()})
                     else:
                         data = ET.Element("lap", {"start": cur_time, "end" : dt_string, "task": self.combo_task_desc.currentText()})
+                data.tail = '\n    '
                 timer.append(data)
                 tree.write("Timers v.1.xml")
 

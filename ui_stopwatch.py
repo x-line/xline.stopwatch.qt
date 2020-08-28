@@ -254,6 +254,7 @@ class Ui_Stopwatch(QWidget):
                 if xname[0] == tname:
                     # ts = time.time()
                     data = ET.Element("lap", {"start": tt5})
+                    data.tail = '\n        '
                     timer.append(data)
                     tree.write("Timers v.1.xml")
         else:

@@ -1,0 +1,2 @@
+class DuplicateTimerException(Exception):
+    pass
