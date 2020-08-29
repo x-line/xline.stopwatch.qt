@@ -10,12 +10,12 @@ class Fluent:
 	task: Optional[str]
 
 	def __init__(self, start_: datetime = None, end: datetime = None, task: str = None):
-		self.start = start_ if start_ is not None else datetime.utcnow()
+		self.start = start_ if start_ is not None else datetime.now()
 		self.end = end
 		self.task = task
 
 	def stop(self):
-			self.end = datetime.utcnow()
+		self.end = datetime.now()
 
 	@property
 	def stopped(self) -> bool:
@@ -23,7 +23,7 @@ class Fluent:
 
 	def getTimeSpan(self) -> timedelta:
 		if self.end < self.start: # It has not stopped
-			return datetime.utcnow() - self.start
+			return datetime.now() - self.start
 		else:
 			return self.end - self.start
 
@@ -54,9 +54,14 @@ class Fluent:
 	def as_xml_element(self):
 		# currentDT = datetime.now()
 		start = self.start.strftime("%Y-%m-%d %H:%M:%S") # get real date time
-		end = self.end.strftime("%Y-%m-%d %H:%M:%S") # get real date time
 
-		xml = ET.Element("lap", {"start": start, "end" : end, "task": self.task})
+		xml = ET.Element("lap", {"start": start})
+		if self.end:
+			end = self.end.strftime("%Y-%m-%d %H:%M:%S") # get real date time
+			xml.set('end', end)
+		if self.task:
+			xml.set('task', self.task)
+
 		return xml
 
 	@staticmethod

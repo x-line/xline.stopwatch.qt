@@ -50,8 +50,11 @@ class Timers:
             # root = tree.getroot()
             # for timer in root.iter('Timer'):
 
+            self.timers: List[Timer] = []
             for xml in tree.findall("./Timer"):
                 self.timers.append(Timer.parse(xml))
+
+            self.groups: List[TimerGroup] = []
             for xml in tree.findall("./Groups"):
                 self.groups.append(TimerGroup.parse(xml))
 

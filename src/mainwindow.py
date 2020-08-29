@@ -7,16 +7,19 @@ import traceback, sys
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from models.Timers import Timers
+from models.Timer import Timer
 from PySide2.QtWidgets import QApplication,QMainWindow, QAction, QListWidget, QComboBox, QMessageBox, QInputDialog, QWidget,QVBoxLayout, QMenu,QLabel, QStackedWidget, QPushButton
-from PySide2.QtCore import QDir, QFile, QXmlStreamWriter, QThreadPool, QTimer, QDateTime
-from reusable_functions import format_timer_name
+from PySide2.QtWidgets import QListWidgetItem
+from PySide2.QtCore import QDir, QFile, QXmlStreamWriter, QThreadPool, QTimer, QDateTime, Qt
+from PySide2.QtCore import QCoreApplication
+from reusable_functions import format_timer_name, format_timer_name_from_xml
 from exports import Exports
 from ui_stopwatch import Ui_Stopwatch
 from xml.dom import minidom
 
 class MainWindow(QMainWindow):
-    def __init__(self):
-        QMainWindow.__init__(self)
+    def __init__(self, parent=None):
+        QMainWindow.__init__(self, parent)
         self.setGeometry(200, 200, 500, 500)
         self.setWindowTitle('Stopwatch')
         self.create_menu()
@@ -25,6 +28,7 @@ class MainWindow(QMainWindow):
         self.create_or_load_timers()
 
         main_widget = Ui_Stopwatch()
+        self.initialize_stopwatch(main_widget)
         self.setCentralWidget(main_widget)
         self.show()
 
@@ -39,57 +43,87 @@ class MainWindow(QMainWindow):
         if not os.path.exists(self.timer_file):
             self.timers.save()
 
-    def recurring_timer(self):
+    def initialize_stopwatch(self, widget: Ui_Stopwatch):
+        # widget.listTimers.itemDoubleClicked.connect(self.startTimer)
+        widget.btnStart.hide()
+        widget.btnStart.clicked.connect(self.startTimer)
+        # Populate Timers for the first time:
+        self.redraw_timers(widget)
 
-        # This file gets parsed several times a second...!
+    def redraw_timers(self, widget: Ui_Stopwatch):
+        widget.listTimers.clear()
         xml_file_name = "Timers v.1.xml"
         tree = ET.parse(xml_file_name)
         root = tree.getroot()
+        for timer in root.iter('Timer'):
+            name = timer.get("name")
+            text = format_timer_name_from_xml(timer)
+            cboItem = QListWidgetItem(text, widget.listTimers)
+            cboItem.setData(Qt.UserRole, name)
 
+    def recurring_timer(self):
         cboPeriod = self.window().findChild(QComboBox, "cboPeriod")
         periodFilter = cboPeriod.currentText();
 
         lw = self.window().findChild(QListWidget, "listTimers")
         for x in range(lw.count()):
-
-            cnamelist= lw.item(x).text().split(" ")
-            if cnamelist[0] == "*":
-                cname = cnamelist[1]
-            else:
-                cname = cnamelist[0]
-
-            if cnamelist[0] == "*":
-                for timer in root.iter('Timer'):
-                    timer_name = timer.get("name")
-
-                    if cname == timer_name:
-                        text = format_timer_name(timer, periodFilter)
-                        lw.item(x).setText(text)
+            cboItem = lw.item(x)
+            name = cboItem.data(Qt.UserRole)
+            text = cboItem.text()
+            # if text[0] == "*":        # Useful for not over-refreshing, but need to make sure reload function repopulates from scratch
+            timer = self.timers.get(name)
+            if timer:
+                text = timer.format_str(periodFilter)
+                cboItem.setText(text)
 
     def new_timer(self):
         (text, ok) = QInputDialog.getText(None, "New Timer", "Please enter the name of the new timer")
-        xml_file_name = QDir.currentPath() + "/Timers v.1.xml"
+        # xml_file_name = QDir.currentPath() + "/Timers v.1.xml"
         # QMessageBox.warning(self, "Message", "Cannot find file %s:\n%s." % (text, xml_file_name))
 
         if ok and text:
-            tree = ET.parse(xml_file_name)
-            root = tree.getroot()
-            data = ET.Element("Timer", {"name": text})
-            root.append(data)
-            #root.insert(1, data)
-            tree.write("Timers v.1.xml")
-            # Timers.write(root, "Timers v.1.xml")
+            # tree = ET.parse(xml_file_name)
+            # root = tree.getroot()
+            # data = ET.Element("Timer", {"name": text})
+            # root.append(data)
+            # #root.insert(1, data)
+            # tree.write("Timers v.1.xml")
+            # # Timers.write(root, "Timers v.1.xml")
 
             # Code work in progrss:
-            # timers = Timers()
-            # timers.append(Timer(text))
-            # timers.save()
+            self.timers.timers.append(Timer(text))
+            self.timers.save()
 
             # Test load and save...
 
 
             self.window().findChild(QListWidget, "listTimers").addItem(text + " (00:00:00)")
             #self.window().findChild()
+
+    def reload(self):
+        self.timers.reload()
+        self.redraw_timers(self.centralWidget())
+
+    def startTimer(self):
+        ui = self.centralWidget()
+        cboItem = ui.listTimers.currentItem()
+        name = cboItem.data(Qt.UserRole)
+        timer = self.timers.get(name)
+        if timer:
+            if timer.stopped:
+                taskText = ui.cboTasks.currentText()
+                timer.start(taskText)
+                ui.btnStart.setText(QCoreApplication.translate("Newtimer", "Stop", None))
+            else:
+                taskText = ui.cboTasks.currentText()
+                timer.stop(taskText)
+                ui.btnStart.setText(QCoreApplication.translate("Newtimer", "Start", None))
+            self.timers.save()
+
+            periodFilter = ui.cboPeriod.currentText();
+            text = format_timer_name(timer, periodFilter)
+            cboItem.setText(text)
+
 
     def exportPeriods(self):
         cboPeriod = self.window().findChild(QComboBox, "cboPeriod")
@@ -122,6 +156,10 @@ class MainWindow(QMainWindow):
         #newAction.setShortcut("Ctrl+N")
         newAction.triggered.connect(self.new_timer)
 
+        reloadAction = QAction("Reload", self)
+        #newAction.setShortcut("Ctrl+N")
+        reloadAction.triggered.connect(self.reload)
+
         editAction = QAction("Edit Times", self)
         #editAction.setShortcut("Ctrl+E")
         editAction.triggered.connect(self.new_timer)
@@ -148,6 +186,7 @@ class MainWindow(QMainWindow):
 
 
         fileMenu.addAction(newAction)
+        fileMenu.addAction(reloadAction)
         fileMenu.addAction(editAction)
         fileMenu.addAction(deleteAction)
         fileMenu.addAction(openAction)

@@ -12,16 +12,17 @@ class Timer:
     def GetLastFluent(self) -> Fluent:
         return self.laps[-1] if self.laps else None
 
-    def start(self):
+    def start(self, task: str = None):
         # If it is already started do nothing.
         fluent = self.GetLastFluent()
         if fluent and fluent.stopped == False:
             return
 
         fluent = Fluent.CreateStart()
+        fluent.task = task
         self.laps.append(fluent)
 
-    def stop(self, task: str):
+    def stop(self, task: str = None):
         # If no last lap or already stopped do nothing
         fluent = self.GetLastFluent()
         if fluent is None or fluent.stopped:
@@ -30,7 +31,12 @@ class Timer:
         fluent.task = task
         return fluent
 
-    def prettyname(self, filter='Total'):
+    @property
+    def stopped(self) -> bool:
+        fluent = self.GetLastFluent()
+        return fluent.stopped if fluent else True
+
+    def format_str(self, filter='Total'):
         return format_timer_name(self, filter)
 
     @staticmethod

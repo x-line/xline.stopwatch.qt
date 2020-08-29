@@ -20,7 +20,7 @@ import xml.etree.ElementTree as ET
 from ui_addlap import Ui_addLap
 import time
 from datetime import datetime
-from reusable_functions import format_timer_name
+from reusable_functions import format_timer_name, format_timer_name_from_xml
 from models.Timers import Timers
 
 
@@ -75,8 +75,8 @@ class Ui_Stopwatch(QWidget):
 
         self.btnStart = QPushButton(self)
         self.btnStart.setObjectName("btnStart")
-        self.btnStart.hide()
-        self.btnStart.clicked.connect(self.startTimer)
+        # self.btnStart.hide()
+        # self.btnStart.clicked.connect(self.startTimer)
 
         self.btnStart.setGeometry(QRect(19, 400, 110, 32))
         self.btnAddLap = QPushButton(self)
@@ -133,13 +133,16 @@ class Ui_Stopwatch(QWidget):
 
         self.retranslateUi(self)
 
-        # Populate Timers for the first time:
-        xml_file_name = "Timers v.1.xml"
-        tree = ET.parse(xml_file_name)
-        root = tree.getroot()
-        for timer in root.iter('Timer'):
-            text = format_timer_name(timer)
-            self.listTimers.addItem(text)
+        # # Populate Timers for the first time:
+        # xml_file_name = "Timers v.1.xml"
+        # tree = ET.parse(xml_file_name)
+        # root = tree.getroot()
+        # for timer in root.iter('Timer'):
+        #     name = timer.get("name")
+        #     text = format_timer_name_from_xml(timer)
+        #     cboItem = QListWidgetItem(text, self.listTimers)
+        #     cboItem.setData(Qt.UserRole, name)
+        #     # self.listTimers.addItem(text)
 
         QMetaObject.connectSlotsByName(self)
 
@@ -198,10 +201,16 @@ class Ui_Stopwatch(QWidget):
             tname = timer.get("name")
             # print(xname)
             if xname == tname:
+                tasks = []
+                taskText = None
                 for lap in timer.iter('lap'):
+                    taskText = lap.get('task')
+                    if taskText:
+                        tasks.append(taskText)
 
-                    if lap.get('task') != None:
-                        self.cboTasks.addItem(lap.get('task'))
+                for t in set(tasks):
+                    self.cboTasks.addItem(t)
+                self.cboTasks.setCurrentText(taskText)
 
     def selectPeriod(self):
         # if not self.cboPeriod.selectedItems(): return
@@ -228,56 +237,56 @@ class Ui_Stopwatch(QWidget):
                 timer_name = timer.get("name")
 
                 if cname == timer_name:
-                    text = format_timer_name(timer, periodFilter)
+                    text = format_timer_name_from_xml(timer, periodFilter)
                     x.setText(text)
 
     def btnPencil_Clicked(self):
         editable = self.cboTasks.isEditable()
         self.cboTasks.setEditable(not editable)
 
-    def startTimer(self):
-        xml_file_name = "Timers v.1.xml"
-        tree = ET.parse(xml_file_name)
-        root = tree.getroot()
+    # def startTimer(self):
+    #     xml_file_name = "Timers v.1.xml"
+    #     tree = ET.parse(xml_file_name)
+    #     root = tree.getroot()
 
-        periodFilter = self.cboPeriod.currentText();
-        selectName = self.listTimers.currentItem().text()
-        if selectName.split(" ")[0] != "*":
+    #     periodFilter = self.cboPeriod.currentText();
+    #     selectName = self.listTimers.currentItem().text()
+    #     if selectName.split(" ")[0] != "*":
 
-            xname = selectName.split(" (")
-            currentDT = datetime.now()
-            tt5 = currentDT.strftime("%Y-%m-%d %H:%M:%S")
+    #         xname = selectName.split(" (")
+    #         currentDT = datetime.now()
+    #         tt5 = currentDT.strftime("%Y-%m-%d %H:%M:%S")
 
-            self.listTimers.currentItem().setText("* " + selectName)
-            self.btnStart.setText(QCoreApplication.translate("Newtimer", "Stop", None))
-            for timer in root.iter('Timer'):
-                tname = timer.get("name")
-                if xname[0] == tname:
-                    # ts = time.time()
-                    data = ET.Element("lap", {"start": tt5})
-                    data.tail = '\n        '
-                    timer.append(data)
-                    tree.write("Timers v.1.xml")
-                    # Timers.write(root, "Timers v.1.xml")
+    #         self.listTimers.currentItem().setText("* " + selectName)
+    #         self.btnStart.setText(QCoreApplication.translate("Newtimer", "Stop", None))
+    #         for timer in root.iter('Timer'):
+    #             tname = timer.get("name")
+    #             if xname[0] == tname:
+    #                 # ts = time.time()
+    #                 data = ET.Element("lap", {"start": tt5})
+    #                 data.tail = '\n        '
+    #                 timer.append(data)
+    #                 tree.write("Timers v.1.xml")
+    #                 # Timers.write(root, "Timers v.1.xml")
 
-        else:
-            # Stop timer:
-            currentDT = datetime.now()
-            tt5 = currentDT.strftime("%Y-%m-%d %H:%M:%S")
-            self.btnStart.setText(QCoreApplication.translate("Newtimer", "Start", None))
-            for timer in root.iter('Timer'):
-                tname = timer.get("name")
-                if selectName.split(" ")[1] == tname:
-                    timer.find('lap[last()]').set("end", tt5)
+    #     else:
+    #         # Stop timer:
+    #         currentDT = datetime.now()
+    #         tt5 = currentDT.strftime("%Y-%m-%d %H:%M:%S")
+    #         self.btnStart.setText(QCoreApplication.translate("Newtimer", "Start", None))
+    #         for timer in root.iter('Timer'):
+    #             tname = timer.get("name")
+    #             if selectName.split(" ")[1] == tname:
+    #                 timer.find('lap[last()]').set("end", tt5)
 
-                    taskText = self.cboTasks.currentText()
-                    timer.find('lap[last()]').set("task", taskText)
-                    tree.write("Timers v.1.xml")
-                    # Timers.write(root, "Timers v.1.xml")
+    #                 taskText = self.cboTasks.currentText()
+    #                 timer.find('lap[last()]').set("task", taskText)
+    #                 tree.write("Timers v.1.xml")
+    #                 # Timers.write(root, "Timers v.1.xml")
 
 
-                    text = format_timer_name(timer, periodFilter)
-                    self.listTimers.currentItem().setText(text)
+    #                 text = format_timer_name_from_xml(timer, periodFilter)
+    #                 self.listTimers.currentItem().setText(text)
 
 
     def addLap(self):
