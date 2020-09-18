@@ -62,7 +62,7 @@ class Ui_Stopwatch(QWidget):
         self.listTimers.setGeometry(QRect(22, 136, 451, 221))
         #self.listTimers.currentItemChanged.connect(self.selectTimer)
         self.listTimers.itemClicked.connect(self.selectTimer)
-        self.listTimers.itemDoubleClicked.connect(self.startTimer)
+        # self.listTimers.itemDoubleClicked.connect(self.startTimer2)
 
         #lw = self.listTimers
         #for x in range(lw.count()-1):

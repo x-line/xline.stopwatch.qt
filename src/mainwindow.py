@@ -14,7 +14,7 @@ from PySide2.QtCore import QDir, QFile, QXmlStreamWriter, QThreadPool, QTimer, Q
 from PySide2.QtCore import QCoreApplication
 from reusable_functions import format_timer_name, format_timer_name_from_xml
 from exports import Exports
-from ui_stopwatch import Ui_Stopwatch
+from ui_stopwatch_code import Ui_Stopwatch_Code
 from xml.dom import minidom
 
 class MainWindow(QMainWindow):
@@ -27,9 +27,9 @@ class MainWindow(QMainWindow):
         self.timer_file = "Timers v.1.xml"
         self.create_or_load_timers()
 
-        main_widget = Ui_Stopwatch()
-        self.initialize_stopwatch(main_widget)
-        self.setCentralWidget(main_widget)
+        self.ui = Ui_Stopwatch_Code(self.timers)
+        # self.ui.setupUi(self)
+        self.setCentralWidget(self.ui)
         self.show()
 
         self.threadpool = QThreadPool()
@@ -42,24 +42,6 @@ class MainWindow(QMainWindow):
         self.timers = Timers(self.timer_file)
         if not os.path.exists(self.timer_file):
             self.timers.save()
-
-    def initialize_stopwatch(self, widget: Ui_Stopwatch):
-        # widget.listTimers.itemDoubleClicked.connect(self.startTimer)
-        widget.btnStart.hide()
-        widget.btnStart.clicked.connect(self.startTimer)
-        # Populate Timers for the first time:
-        self.redraw_timers(widget)
-
-    def redraw_timers(self, widget: Ui_Stopwatch):
-        widget.listTimers.clear()
-        xml_file_name = "Timers v.1.xml"
-        tree = ET.parse(xml_file_name)
-        root = tree.getroot()
-        for timer in root.iter('Timer'):
-            name = timer.get("name")
-            text = format_timer_name_from_xml(timer)
-            cboItem = QListWidgetItem(text, widget.listTimers)
-            cboItem.setData(Qt.UserRole, name)
 
     def recurring_timer(self):
         cboPeriod = self.window().findChild(QComboBox, "cboPeriod")
@@ -102,28 +84,7 @@ class MainWindow(QMainWindow):
 
     def reload(self):
         self.timers.reload()
-        self.redraw_timers(self.centralWidget())
-
-    def startTimer(self):
-        ui = self.centralWidget()
-        cboItem = ui.listTimers.currentItem()
-        name = cboItem.data(Qt.UserRole)
-        timer = self.timers.get(name)
-        if timer:
-            if timer.stopped:
-                taskText = ui.cboTasks.currentText()
-                timer.start(taskText)
-                ui.btnStart.setText(QCoreApplication.translate("Newtimer", "Stop", None))
-            else:
-                taskText = ui.cboTasks.currentText()
-                timer.stop(taskText)
-                ui.btnStart.setText(QCoreApplication.translate("Newtimer", "Start", None))
-            self.timers.save()
-
-            periodFilter = ui.cboPeriod.currentText();
-            text = format_timer_name(timer, periodFilter)
-            cboItem.setText(text)
-
+        self.ui.redraw_timers()
 
     def exportPeriods(self):
         cboPeriod = self.window().findChild(QComboBox, "cboPeriod")
