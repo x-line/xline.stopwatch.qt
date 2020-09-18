@@ -204,7 +204,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QDateTimeEdit" name="dtToPicker">
+  <widget class="QDateTimeEdit" name="dtToFilter">
    <property name="geometry">
     <rect>
      <x>320</x>
@@ -214,7 +214,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="lblFromFilter">
    <property name="geometry">
     <rect>
      <x>275</x>
