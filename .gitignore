@@ -3,7 +3,9 @@ Timers v.*.xml
 
 # Python
 env
+venv
 *.pyc
+__pycache__
 
 # User Specific
 .vscode
